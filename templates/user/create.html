@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block body %}
+  <form method="post" action="/users/create">
+    <input type="text" name ="username" placeholder="Username">
+    <input type="text" name="email" placeholder="Email">
+    <input type="password" name="password" placeholder="password">
+    <input type="password" name="confirm" placeholder="confirm password">
+    <input type="submit" value="Register">
+  </form>
+  <p> {{ message }} </p>
+
+
+{% endblock %}
