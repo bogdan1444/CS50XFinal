@@ -149,26 +149,36 @@ def dashboard():
     return render_template("user/dashboard.html", user= user)
 
 
-@app.route('/sent', methods = ["GET", "POST"])
+@app.route('/sent', methods=["GET", "POST"])
 @login_required
 def sent():
-    if request.method == "GET":
+    if request.method=="GET":
         sender_email = current_user.email
-        # print(sender_email)
+
         senders_emails = []
         for user in User.query.all():
             senders_emails.append(user.email)
-        # print(senders_emails)
-        # print(datetime.now())
+        print(senders_emails)
+
         return render_template("user/sent.html")
     else:
         email_to = request.form.get("email_to")
-        cc = request.form.get("email_cc")
+       
+        # if  not email_to in sender_email:
+        #     Erormsg = "Receiver email not found "
+        #     print(Erormsg)
+        #     return render_template("user/sent.html", error=Erormsg)
+            
         subject = request.form.get("subject")
-        # if (not )
         message = request.form.get("message")
-        print(email_to, cc, subject,message)
-        print()
+        # print(email_to, cc, subject,message)
+        # mail = Mail(
+        #     sender = current_user.email,
+        #     receiver = email_to,
+        #     subject = subject,
+        #     message = message,
+        #     timestamp = datetime.now()
+        # )
         return render_template("user/sent.html")
     
     
