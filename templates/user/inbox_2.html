@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+  <h1>INBOX 2 {{ user }}</h1>
+  
+    
+
+  <form action="/inbox" method="post">
+    <input type="checkbox" id="type_of_mail" name="sent" value="sent">
+    <label for="vehicle1"> Sented email</label><br>
+    <input type="checkbox" id="type_of_mail" name="received" value="received">
+    <label for="received">Received mails</label><br>
+    <input type="submit" name="see" value="See mails" >
+</form>
+   
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Sender</th>
+      <th scope="col">Receiver</th>
+      <th scope="col">Suject</th>
+      <th scope="col">See content</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for mail in mails %}
+  
+      <th> {{ mail.sender }} </th>
+      <th> {{ mail.receiver }} </th>
+
+      
+    {% endfor %}
+    <tr>
+
+    
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+  <ol>
+  {% for user in users %}
+    <li> {{ user.username }}  {{ user.email }}</li>
+
+
+
+  {% endfor %}
+  </ol>
+
+{% endblock %}
+<script>
+
+</script>

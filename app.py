@@ -154,34 +154,105 @@ def dashboard():
 def sent():
     if request.method=="GET":
         sender_email = current_user.email
-
-        senders_emails = []
-        for user in User.query.all():
-            senders_emails.append(user.email)
-        print(senders_emails)
-
+        print(Mail.query.all())
         return render_template("user/sent.html")
     else:
         email_to = request.form.get("email_to")
        
-        # if  not email_to in sender_email:
-        #     Erormsg = "Receiver email not found "
-        #     print(Erormsg)
-        #     return render_template("user/sent.html", error=Erormsg)
-            
+        senders_emails = []
+        for user in User.query.all():
+            senders_emails.append(user.email)
+        print(senders_emails) 
+        #check the reciveiever
+        if  not email_to in senders_emails:
+            Erormsg = "Receiver email not found "
+            print(Erormsg)
+            return render_template("user/sent.html", error=Erormsg)
+
         subject = request.form.get("subject")
         message = request.form.get("message")
-        # print(email_to, cc, subject,message)
-        # mail = Mail(
-        #     sender = current_user.email,
-        #     receiver = email_to,
-        #     subject = subject,
-        #     message = message,
-        #     timestamp = datetime.now()
-        # )
+        print(email_to, subject,message)
+        mail = Mail(
+            sender = current_user.email,
+            receiver = email_to,
+            subject = subject,
+            message = message,
+            timestamp = datetime.now()
+        )
+        db.session.add(mail)
+        db.session.commit()
         return render_template("user/sent.html")
     
+
+@app.route("/inbox", methods=["GET", "POST"])
+@login_required
+def inbox():
+    user = current_user.username
+    if(request.method=="GET"):
+        return render_template("user/inbox.html", user= user)
+    else:
+        # types_email = ["sended", "received", "all"]
+        print(request.form.get("sent"))
+        print(request.form.get("received"))
+        mails = []
+        if( request.form.get("sent") and request.form.get("received")):
+            print("show all emails")
+            mails = show_emails("all")
+            # return render_template("user/inbox_2.html",mails=mails)
+        elif(request.form.get("received")):
+            print("show all emails received")
+            mails = show_emails("received")
+        elif(request.form.get("sent")):
+            # print("show sended emails")
+            mails = show_emails("sent")
+        else:
+            print("Select what email you want to see")
+        # show_emails("sent")
+        
+        return render_template("user/inbox.html", mails=mails)
     
+
+
+
+@login_required
+def show_emails(type_of_mail):
+    # print(Mail.query.order_by(Mail.timestamp.desc()).all())
+    if(type_of_mail=="sent"):
+        mails = Mail.query.filter_by(sender=current_user.email).order_by(Mail.timestamp.desc()).all()
+    # print(mails)
+    # print(type(mails)
+            
+        for mail in mails:
+            mail.sender = "you"
+            mail.receiver_name = User.query.filter_by(email=mail.receiver).first().username
+        # print(mail.sender)
+    # print(len(mails))
+    elif(type_of_mail=="received"):
+        mails = Mail.query.filter_by(receiver=current_user.email).order_by(Mail.timestamp.desc()).all()
+        for mail in mails:
+            mail.receiver = "you"
+            mail.sender_name = User.query.filter_by(email=mail.sender).first().username
+        print(mails)
+    elif(type_of_mail=="all"):
+        mails_s = Mail.query.filter_by(sender=current_user.email).order_by(Mail.timestamp.desc()).all()
+        for mail in mails_s:
+            mail.sender = "you"
+        mails_r = Mail.query.filter_by(receiver=current_user.email).order_by(Mail.timestamp.desc()).all()
+        for mail in mails_r:
+            mail.sender = "you"
+        mails = mails_s + mails_r
+        
+    indexes = []
+    for i in range(len(mails)):
+        indexes.append(i+1)
+    for i in range(len(indexes)):
+        mails[i].index = indexes[i]
+    # for mail in mails:
+        # print(mail.index)
+    
+    return mails
+
+
 
 if __name__=="__main__":
   app.run(debug=True)
