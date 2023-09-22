@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h1>SENT PAGE</h1>
+
+
+<form>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="inputEmail4">To:</label>
+      <input type="email" name="email_to" class="form-control" id="inputEmail4" placeholder="Email">
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="inputEmail4">CC:</label>
+        <input type="email" name="email_cc" class="form-control" id="inputEmail4" placeholder="Email">
+      </div>
+  </div>
+</div>
+
+    <div class="form-group col-md-6">
+      <label for="inputCity">Subject</label>
+      <input type="text" name="subject" class="form-control" id="inputmessage">
+    </div>
+
+
+      <label for="inputZip">Content</label><br>
+      <input type="text" name="message" class="form-control w-100 p-3" id="inputmessage">
+
+
+  
+    <br>
+  <button type="submit" class="btn btn-primary">Sent</button>
+</form>
+
+
+{% endblock %}

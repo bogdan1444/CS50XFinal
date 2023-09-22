@@ -1,10 +1,12 @@
 from flask import Flask, redirect, request, render_template, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy import Integer, String
+from sqlalchemy import Integer, String, DateTime
 from sqlalchemy.orm import Mapped, mapped_column
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import login_required, login_user, LoginManager, logout_user, current_user, UserMixin
+from sqlalchemy.sql import func
+from datetime import datetime
 
 class Base(DeclarativeBase):
   pass
@@ -32,6 +34,14 @@ class User(db.Model, UserMixin):
     password: Mapped[str] = mapped_column(String, nullable=False)
     def is_authenticated(self):
         return True 
+class Mail(db.Model, UserMixin):
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    sender: Mapped[str] = mapped_column(String)
+    receiver: Mapped[str] = mapped_column(String)
+    subject : Mapped[str] = mapped_column(String)
+    message: Mapped[str] = mapped_column(String)
+    timestamp: Mapped[timestamp] = mapped_column(DateTime, default= datetime.now())
+    
 
 
 @login_manager.user_loader
@@ -137,6 +147,31 @@ def dashboard():
     if(current_user):
         user = current_user
     return render_template("user/dashboard.html", user= user)
+
+
+@app.route('/sent', methods = ["GET", "POST"])
+@login_required
+def sent():
+    if request.method == "GET":
+        sender_email = current_user.email
+        # print(sender_email)
+        senders_emails = []
+        for user in User.query.all():
+            senders_emails.append(user.email)
+        # print(senders_emails)
+        # print(datetime.now())
+        return render_template("user/sent.html")
+    else:
+        email_to = request.form.get("email_to")
+        cc = request.form.get("email_cc")
+        subject = request.form.get("subject")
+        # if (not )
+        message = request.form.get("message")
+        print(email_to, cc, subject,message)
+        print()
+        return render_template("user/sent.html")
+    
+    
 
 if __name__=="__main__":
   app.run(debug=True)
