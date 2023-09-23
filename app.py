@@ -170,7 +170,7 @@ def dashboard():
 def sent():
     if request.method=="GET":
         sender_email = current_user.email
-        print(Mail.query.all())
+        # print(Mail.query.all())
         return render_template("user/sent.html")
     else:
         email_to = request.form.get("email_to")
@@ -178,26 +178,33 @@ def sent():
         senders_emails = []
         for user in User.query.all():
             senders_emails.append(user.email)
-        print(senders_emails) 
+        # print(senders_emails) 
         #check the reciveiever
         if  not email_to in senders_emails:
             Erormsg = "Receiver email not found "
-            print(Erormsg)
+            # print(Erormsg)
+            flash(Erormsg)
             return render_template("user/sent.html", error=Erormsg)
 
         subject = request.form.get("subject")
         message = request.form.get("message")
-        print(email_to, subject,message)
-        mail = Mail(
-            sender = current_user.email,
-            receiver = email_to,
-            subject = subject,
-            message = message,
-            timestamp = datetime.now()
-        )
-        db.session.add(mail)
-        db.session.commit()
-        return render_template("user/sent.html")
+        # print(email_to, subject,message)
+        try:
+            mail = Mail(
+                sender = current_user.email,
+                receiver = email_to,
+                subject = subject,
+                message = message,
+                timestamp = datetime.now()
+            )
+            db.session.add(mail)
+            db.session.commit()
+            flash("Mail delivered succesfully")
+            return render_template("user/sent.html")
+        except:
+            flash("Mail NOT delivered")
+            return render_template("user/sent.html")
+        
     
 
 @app.route("/inbox", methods=["GET", "POST"])
@@ -278,7 +285,12 @@ def mail_content():
         mail = Mail.query.filter_by(id = mail_id).first()
         print(mail)
         return render_template("user/inbox_2.html", mail=mail)
+
     
+
+
+
+
 
 
 @app.route("/chpass", methods=["GET", "POST"])
@@ -289,15 +301,20 @@ def chpass():
     else:
         if( not check_password_hash( User.query.filter_by(username=current_user.username).first().password,request.form.get("old_password"))):
                 flash("EROR password incorect")
+                return render_template("user/chpass.html")
         if ((request.form["password"]) != (request.form["confirm"]) or not request.form["password"]):
             flash("Passwor do not match")
+            return render_template("user/chpass.html")
         #TODO
         try:
             current_user.password = generate_password_hash(request.form["password"])
             db.session.commit()
+            flash("Passord succesfull changed")
+            return render_template("user/chpass.html")
         except:
             flash("Somethig goes wrong")
-        return render_template("user/chpass.html")
+            return render_template("user/chpass.html")
+        
 
 if __name__=="__main__":
   app.run(debug=True)

@@ -14,8 +14,12 @@
     <link href="/static/styles.css" rel="stylesheet">
 
     <title>Mail app: {% block title %}  {% endblock %}</title>
-
+    
 </head>
+
+
+<body>
+
 
 {% if get_flashed_messages() %}
 <header>
@@ -61,7 +65,7 @@
 
 
 
-    <body>
+    
         <main class="container p-5">
         {% block body %}
         
@@ -72,6 +76,14 @@
         <footer class="small text-center text-muted">
             Data provided for free by <a href="https://iextrading.com/developer">IEX</a>. View <a href="https://iextrading.com/api-exhibit-a/">IEX’s Terms of Use</a>.
         </footer>
+
+    </div>
+
+
+   
     </body>
+
+
+
 </html>
 

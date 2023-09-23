@@ -9,8 +9,16 @@
   
    <h2> Sender email: {{ mail.sender }}  </h2>
    <h2> Email subject: {{ mail.subject }}  </h2>
-   <h2> Email content </h2>
-   <h3>  {{ mail.message }}  </h3>
+   <h2> Email content :</h2>
+   <textarea name="" id="" cols="30" rows="10">
+    {{ mail.message }} 
+
+   </textarea>
+
+   <form action="{{ url_for('sent') }}" method="get">
+    <input type="hidden" name="mail" value="{{ mail.id }}">
+    <input type="submit" class="btn btn-dark" value="Reply">
+</form>
   
 
 
