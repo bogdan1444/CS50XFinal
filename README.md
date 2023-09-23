@@ -1,3 +1,6 @@
+# YOUR PROJECT TITLE
+#### Video Demo:  <URL https://youtu.be/vn-2h8E3Mnk>
+#### Description:
 This is prototype of a MAIL APP constructed using pyton, flask, flask_sqlalchemy
 - Starting with register form with server validation for duplication user, null password, null username and email, password match, and client side validation for email input i.e. should contain @somethig;
       register form submits data via post method; function user_  create is called: after checking the content, in database is added the new user - this is done by creating a new instance of User class. this function returns a flash with "User created succesfull" if is okay.
@@ -18,5 +21,17 @@ this aplications is using flask_login log fuction to:
    -remember the current_user
    - acces some function only of the currend user is logged in by usend @login_required decorator on those specific functions
 
+all the templates use the "layout.html" base. the mail ones are:
+- create.html - form for submitting user credentials
+- login.html - submitting login form
+- index.html, detail.html - main page - with user details
+- inbox.html, inbox_2.html - list all emails, list specific email content
+- sent.html form for submitting sent email
+- chpass - change the password form
+some other like list.html, dashboard.html, delete.html are not necesarely part of the project, it is more for testing the app, and see what is going on;
 
-https://youtu.be/vn-2h8E3Mnk
+All the python code is written in app.py with all the imported libraries, routes, and axiliary functions.
+During constructing the app I use printing statemets to see what code, more of those remain there for debugging purposes
+This project was build on the fundation of Finance Problem set frame but changeing entirely  the LoginManager, aand database, as i use flask_sqlaclemy and flask_login features instead of sessions and CS50 library. I chose to use these features for making for better understanding of login management
+Flask Sqlalchemy documentation and stackoverflow.com where the main inspirations sources for writing the code for this project.
+
