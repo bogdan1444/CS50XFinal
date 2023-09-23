@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
 
 {% block body %}
+{% if is_auth %}
+
+{% endif %}
 <h1><a href="{{  url_for('login') }}"> Log in page  </a></h1>
 <h1><a href="{{  url_for('user_create')  }}"> Register </a></h1>
 

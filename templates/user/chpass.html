@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block body %}
+  <form method="post" action="/chpass">
+    <div class="form-floating mb-3">
+      <input type="password" name="old_password" placeholder="Old password">
+    </div>
+    <div class="form-floating mb-3">
+      <input type="password" name="password" placeholder="NEw password">
+    </div>
+    <div class="form-floating mb-3">
+      <input type="password" name="confirm" placeholder="confirm New password">
+    </div>
+   
+    <div class="form-floating mb-3">
+      <input type="submit" value="Register">
+    </div>
+  
+  </form>
+  <p class="error_message"> {{ message }} </p>
+
+
+{% endblock %}

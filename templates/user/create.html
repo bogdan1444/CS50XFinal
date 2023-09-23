@@ -2,13 +2,25 @@
 
 {% block body %}
   <form method="post" action="/users/create">
-    <input type="text" name ="username" placeholder="Username">
-    <input type="text" name="email" placeholder="Email">
-    <input type="password" name="password" placeholder="password">
-    <input type="password" name="confirm" placeholder="confirm password">
-    <input type="submit" value="Register">
+    <div class="form-floating mb-3">
+      <input type="text" name ="username" placeholder="Username">
+    </div>
+    <div class="form-floating mb-3">
+      <input type="email" name="email" placeholder="Email">
+    </div>
+    <div class="form-floating mb-3">
+      <input type="password" name="password" placeholder="password">
+    </div>
+    <div class="form-floating mb-3">
+      <input type="password" name="confirm" placeholder="confirm password">
+    </div>
+   
+    <div class="form-floating mb-3">
+      <input type="submit" value="Register">
+    </div>
+  
   </form>
-  <p> {{ message }} </p>
+  <p class="error_message"> {{ message }} </p>
 
 
 {% endblock %}

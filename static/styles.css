@@ -61,3 +61,7 @@ main tfoot
 #inputmessage{
     
 }
+.error_message{
+    color: red;
+    font-size: 30px;
+}

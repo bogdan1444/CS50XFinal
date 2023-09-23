@@ -30,7 +30,7 @@ login_manager.login_view = "login"
 class User(db.Model, UserMixin):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     username: Mapped[str] = mapped_column(String, unique=True, nullable=False)
-    email: Mapped[str] = mapped_column(String)
+    email: Mapped[str] = mapped_column(String, unique=True)
     password: Mapped[str] = mapped_column(String, nullable=False)
     def is_authenticated(self):
         return True 
@@ -51,11 +51,18 @@ def load_user(user_id):
 #create db - DATABASE
 with app.app_context():
     db.create_all()
+    # db.drop_all()
   
 
 @app.route("/")
 def index():
-    is_auth = current_user.is_authenticated()
+    try:
+        is_auth = current_user.is_authenticated()
+    except:
+        is_auth = False
+    print(is_auth)
+    if(is_auth):
+        return redirect(url_for("user_detail",id=current_user.id))
     return render_template("user/index.html", is_auth=is_auth)
 
 @app.route("/users")
@@ -72,7 +79,11 @@ def user_create():
             return render_template("user/create.html", message="password do not match")
         try:
             if User.query.filter_by(username =request.form["username"]).first() :
+                flash("Retry register")
                 return render_template("user/create.html", message="username already exists")
+            if User.query.filter_by(email =request.form["email"]).first() :
+                flash("Retry register")
+                return render_template("user/create.html", message="email already exists")
             user = User(
                 username=request.form["username"],
                 email=request.form["email"],
@@ -82,6 +93,7 @@ def user_create():
             return render_template("user/create.html", message="username already exists")
         db.session.add(user)
         db.session.commit()
+        flash("User created succesfully")
         return redirect(url_for("user_detail", id=user.id))
 
     return render_template("user/create.html")
@@ -121,10 +133,11 @@ def login():
             # print(username) # print username, password
             # print(password)
             if(not username or not password):
+                flash("Please insert username or password")
                 return render_template("user/login.html")
             #check password and username 
             if(( not username==User.query.filter_by(username=username).first().username) or (not check_password_hash( User.query.filter_by(username=username).first().password,password))):
-                print("EROR username incorect or  password incorect")
+                flash("EROR username incorect or  password incorect")
                 return render_template("user/login.html")
             # user = User.query.filter_by
         except:
@@ -267,6 +280,24 @@ def mail_content():
         return render_template("user/inbox_2.html", mail=mail)
     
 
+
+@app.route("/chpass", methods=["GET", "POST"])
+@login_required
+def chpass():
+    if request.method=="GET":
+        return render_template("user/chpass.html")
+    else:
+        if( not check_password_hash( User.query.filter_by(username=current_user.username).first().password,request.form.get("old_password"))):
+                flash("EROR password incorect")
+        if ((request.form["password"]) != (request.form["confirm"]) or not request.form["password"]):
+            flash("Passwor do not match")
+        #TODO
+        try:
+            current_user.password = generate_password_hash(request.form["password"])
+            db.session.commit()
+        except:
+            flash("Somethig goes wrong")
+        return render_template("user/chpass.html")
 
 if __name__=="__main__":
   app.run(debug=True)

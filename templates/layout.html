@@ -17,6 +17,13 @@
 
 </head>
 
+{% if get_flashed_messages() %}
+<header>
+    <div class="alert alert-primary mb-0 text-center" role="alert">
+        {{ get_flashed_messages() | join(" ") }}
+    </div>
+</header>
+{% endif %}
     
 <nav class="navbar navbar-expand-md navbar-light bg-light border">
     <a class="navbar-brand" href="/"><span class="green">Mail </span><span class="yellow">a</span><span class="green">pp</span> </a>
@@ -37,7 +44,7 @@
               
             </ul>
             <ul class="navbar-nav ml-auto mt-2">
-                <li class="nav-item"><a class="nav-link" href="/reset">Change Password</a></li>
+                <li class="nav-item"><a class="nav-link" href="/chpass">Change Password</a></li>
                 <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
             </ul>
         {% else %}
