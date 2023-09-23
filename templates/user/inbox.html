@@ -34,7 +34,14 @@
       <th> {{ mail.receiver }} </th>
       <th> {{ mail.subject }} </th>
       <th> {{ mail.timestamp }} </th>
-      <th>   <a href="">see content </a></th>
+      <th>  
+        <form action="{{ url_for('mail_content') }}" method="POST">
+          <input type="hidden" name="mail" value="{{ mail.id }}">
+          <input type="submit" value="See content">
+      </form>
+      </th>
+      
+
     </tr>
     {% endfor %}
    

@@ -55,7 +55,8 @@ with app.app_context():
 
 @app.route("/")
 def index():
-    return render_template("user/index.html")
+    is_auth = current_user.is_authenticated()
+    return render_template("user/index.html", is_auth=is_auth)
 
 @app.route("/users")
 def user_list():
@@ -110,6 +111,8 @@ def user_delete(id):
 @app.route("/login", methods=["POST","GET"])
 def login():
     if(request.method == "GET"):
+        # if(current_user.is_authenticated()):
+        #         return render_template("user/dashboard.html", user = current_user)
         return render_template("user/login.html")
     else:
         try:
@@ -252,6 +255,17 @@ def show_emails(type_of_mail):
     
     return mails
 
+
+@app.route("/content", methods = ["POST"])
+@login_required
+def mail_content():
+    if request.method == "POST":
+        mail_id = request.form.get("mail")
+        print(mail_id)
+        mail = Mail.query.filter_by(id = mail_id).first()
+        print(mail)
+        return render_template("user/inbox_2.html", mail=mail)
+    
 
 
 if __name__=="__main__":
